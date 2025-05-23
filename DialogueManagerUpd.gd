@@ -1,12 +1,8 @@
-# В DialogueManager при добавлении кнопок:
-func add_buttons(options):
-    for option in options:
-        var show_option = true
-        for flag in option.flags_required:
-            if StoryFlags.get_flag(flag) != option.flags_required[flag]:
-                show_option = false
-                break
-        if show_option:
-            var button = next_button.instantiate()
-            button.dialogue = option
-            %Options.add_child(button)
+# dialogue_manager.gd
+# В методе add_buttons после создания кнопки:
+button.pressed.connect(func():
+    if option.triggers.size() > 0:
+        StoryManager.process_triggers(option.triggers)
+    if option.completes_quest and current_speaker.quest:
+        QuestManager.complete_quest(current_speaker.quest)
+)
